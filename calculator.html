@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>N!</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">Nigers!!!!!!!!  </h1>
+      <input id="InX">
+      <input id="InY">
+      <button onclick="start()">Calculate</button>
+      <div id = "lerz"></div>
+      <table border=1 id="f">
+      <tr>
+      <th>x</th>
+      <th>y</th>
+      <th>xy</th>
+      <th>x²</th>
+      <th>y²</th>
+      </tr>
+      </table>
+      <div id="Alok"></div>
+      <script>
+let x = [30,40,50,60,70]
+let y = [10,20,30,40,30]
+
+let xy = []
+let x2 = []
+let y2 = []
+let sx = 0
+let sy = 0
+let sxy = 0
+let sx2 = 0
+let sy2 = 0
+
+function sums(arr){
+  let total = 0
+  for(let i = 0; i < arr.length; i++){
+    total += arr[i]
+  }
+  return total
+}
+
+function createtablevar(tb){
+  for(let i = 0; i < tb.length; i++){
+    console.log(i, tb[i])
+  }
+}
+
+function calculate(){
+let place = document.getElementById("lerz")
+let inx = document.getElementById("InX").value
+let iny = document.getElementById("InY").value
+let valx = inx.split(",").map(Number)
+let valy = iny.split(",").map(Number)
+x = valx
+y = valy
+xy = []
+x2 = []
+y2 = []
+for(let i = 0; i < x.length; i++){
+  xy.push(x[i] * y[i])
+  x2.push(x[i] * x[i])
+  y2.push(y[i] * y[i])
+}
+
+sx = sums(x)
+sy = sums(y)
+sxy = sums(xy)
+sx2 = sums(x2)
+sy2 = sums(y2)
+console.log("xy", xy)
+console.log("x2", x2)
+console.log("y2", y2)
+
+// sums
+let n = x.length
+  let var1 = ((n * sxy) - (sx * sy))
+  let var2 = (n * (sx2) - (sx * sx))
+  let var3 = (n * (sy2) - (sy * sy))
+  let resvar23 = Math.sqrt(var2 * var3)
+  let res = var1 / resvar23
+document.getElementById("f").innerHTML = ""
+for(let i =0;i < x.length;i++){
+document.getElementById("f").innerHTML += `<tr>
+<td>${x[i]}</td>
+<td>${y[i]}</td>
+<td>${xy[i]}</td>
+<td>${x2[i]}</td>
+<td>${y2[i]}</td>
+</tr>`
+}
+document.getElementById("f").innerHTML += `<tr>
+<td>${sx}</td>
+<td>${sy}</td>
+<td>${sxy}</td>
+<td>${sx2}</td>
+<td>${sy2}</td>
+</tr>`
+
+
+  console.log(res)
+  return [resvar23, res, var2 * var3]
+}
+
+// output ke HTML
+function output(text){
+  document.getElementById("Alok").innerText = text
+}
+function start(){
+
+let [cal1, cal2, cal3] = calculate()
+let n = x.length
+console.log("sxy",sxy)
+output(
+"r = "+n+"("+sxy+") - ("+sx+")("+sy+")\n"+
+"√"+n+" . "+sx2+" - ("+sx+")² × √"+n+" . "+sy2+" - ("+sy+")²\n\n"+
+"= "+(n * sxy)+" - "+(sx * sy)+
+"\\√"+(n * sx2)+" - "+(sx * sx)+" × √"+(n * sy2)+" - "+(sy * sy)+"\n"+
+"= "+((n * sxy) - (sx * sy))+
+"\\√"+(((n * sx2) - (sx * sx)) * ((n * sy2) - (sy * sy)))+
+"\n = "+cal3+"\\"+cal1+"\n= "+cal2
+)
+}
+</script>
+  </body>
+</html>
