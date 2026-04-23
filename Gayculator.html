@@ -130,6 +130,28 @@ output(
   </body>
   
   
+</html>function start(){
+
+let [cal1, cal2, cal3] = calculate()
+let n = x.length
+console.log("sxy",sxy)
+let cal4 = Math.floor(cal2 * 10000) / 10000
+output(
+"r = "+n+"("+sxy+") - ("+sx+")("+sy+")\n"+"──────────────────────\n"+
+"√"+n+" . "+sx2+" - ("+sx+")² × √"+n+" . "+sy2+" - ("+sy+")²\n\n"+
+(n * sxy)+" - "+(sx * sy)+
+"\n───────────────\n√"+(n * sx2)+" - "+(sx * sx)+" × √"+(n * sy2)+" - "+(sy * sy)+"\n\n"
++((n * sxy) - (sx * sy))+
+"\n──────────\n√"+((n * sx2) - (sx * sx)) +" x √"+ ((n * sy2) - (sy * sy))+
+"\n\n "+((n * sxy) - (sx * sy))+
+"\n────────\n√"+(((n * sx2) - (sx * sx)) * ((n * sy2) - (sy * sy)))+
+"\n\n "+((n * sxy) - (sx * sy))+"\n────────\n"+cal1+"\n\n= "+cal4+"\n\nD =" + cal4+"² x 100% ="+cal4+"x"+cal4+"x 100% ="+(cal4*cal4) +"x100%="+((cal4*cal4)*100)+"%"
+)
+}
+</script>
+  </body>
+  
+  
 </html>function sums(arr){
   let total = 0
   for(let i = 0; i < arr.length; i++){
