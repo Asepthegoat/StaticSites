@@ -1,111 +1,126 @@
-
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>N!</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-      <h1 class="title">Nigers!!!!!!!!  </h1>
-      <input id="InX">
-      <input id="InY">
-      <button onclick="calculate()">Calculate</button>
-      <div id = "lerz"></div>
-      <table border=1 id="f">
-      <tr>
-      <th>x</th>
-      <th>y</th>
-      <th>xy</th>
-      <th>x²</th>
-      <th>y²</th>
-      </tr>
-      </table>
-      <div id="Alok"></div>
-      <script>
-let x = [30,40,50,60,70]
-let y = [10,20,30,40,30]
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
 
-let xy = []
-let x2 = []
-let y2 = []
-let sx = 0
-let sy = 0
-let sxy = 0
-let sx2 = 0
-let sy2 = 0
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-function sums(arr){
-  let total = 0
-  for(let i = 0; i < arr.length; i++){
-    total += arr[i]
-  }
-  return total
-}
+        body{
+            background: #0f1117;
+            color: white;
+            padding: 40px;
+        }
 
-function createtablevar(tb){
-  for(let i = 0; i < tb.length; i++){
-    console.log(i, tb[i])
-  }
-}
+        h1{
+            font-size: 40px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4f8cff;
+            padding-left: 15px;
+        }
 
-function calculate(){
-let place = document.getElementById("lerz")
-let inx = document.getElementById("InX").value
-let iny = document.getElementById("InY").value
-let valx = inx.split(",").map(Number)
-let valy = iny.split(",").map(Number)
-x = valx
-y = valy
-xy = []
-x2 = []
-y2 = []
-for(let i = 0; i < x.length; i++){
-  xy.push(x[i] * y[i])
-  x2.push(x[i] * x[i])
-  y2.push(y[i] * y[i])
-}
+        #items{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
 
-sx = sums(x)
-sy = sums(y)
-sxy = sums(xy)
-sx2 = sums(x2)
-sy2 = sums(y2)
-console.log("xy", xy)
-console.log("x2", x2)
-console.log("y2", y2)
+        .card{
+            background: #1a1d26;
+            border: 1px solid #2c3242;
+            border-radius: 15px;
+            padding: 20px;
+            width: 40%;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
 
-// sums
-let n = x.length
-  let var1 = ((n * sxy) - (sx * sy))
-  let var2 = (n * (sx2) - (sx * sx))
-  let var3 = (n * (sy2) - (sy * sy))
-  let resvar23 = Math.sqrt(var2 * var3)
-  let res = var1 / resvar23
-document.getElementById("f").innerHTML = ""
-for(let i =0;i < x.length;i++){
-document.getElementById("f").innerHTML += `<tr>
-<td>${x[i]}</td>
-<td>${y[i]}</td>
-<td>${xy[i]}</td>
-<td>${x2[i]}</td>
-<td>${y2[i]}</td>
-</tr>`
-}
-document.getElementById("f").innerHTML += `<tr>
-<td>${sx}</td>
-<td>${sy}</td>
-<td>${sxy}</td>
-<td>${sx2}</td>
-<td>${sy2}</td>
-</tr>`
+        .card:hover{
+            transform: translateY(-5px);
+            border-color: #4f8cff;
+        }
 
+        .card h2{
+            margin-bottom: 15px;
+            color: #4f8cff;
+        }
 
-  console.log(res)
-  return [resvar23, res, var2 * var3]
-}
-</script>
-  </body>
-  
-  
+        .card img{
+            object-fit: cover;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card p{
+            color: #b8bcc7;
+            line-height: 1.6;
+        }
+        @media (max-width: 1000px) {
+            .card{
+                background: #1a1d26;
+                border: 1px solid #2c3242;
+                border-radius: 15px;
+                padding: 20px;
+                width: 46%;
+                box-shadow: 0 0 15px rgba(0,0,0,0.3);
+                transition: 0.3s;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lingkungan</h1>
+
+    <div id="items"></div>
+
+    <script>
+        const testimg = "https://i.pinimg.com/236x/ed/9f/03/ed9f03668224689aa59d2d80e8d55e78.jpg"
+        function getId(id){
+            return document.getElementById(id)
+        }
+
+        const items = getId("items")
+
+        function addItem(title,source,desc){
+            items.innerHTML += `
+            <div class="card">
+                <h2>${title}</h2>
+                <img src="${source}">
+                <p>${desc}</p>
+            </div>`
+        }
+
+        addItem(
+            "Gedung",
+            testimg,
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        )
+        addItem(
+            "Lab Komputer",
+            testimg,
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        )
+        addItem(
+            "Kantin",
+            testimg,
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        )
+        addItem(
+            "Kelas",
+            testimg,
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        )
+    </script>
+
+</body>
 </html>
