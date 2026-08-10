@@ -24,7 +24,10 @@ local function init()
     task.wait(0.1)
     game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("SetTeam2","Marines")
 end
-game.Loaded:Connect(init)
+game.Loaded:Wait()
+task.wait(4)
+init()
+
 local function hopserver()
     local Event = game:GetService("ReplicatedStorage").__ServerBrowser
     local tbl = Http:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100&cursor="))
