@@ -11,8 +11,8 @@ local function init()
     task.wait(0.1)
     game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("SetTeam2","Marines")
 end 
-task.wait(5)
-repeat init() task.wait(0.2) until player.Character
+repeat init() task.wait(2) until player.Character
+task.wait(10)
 --[[
 task.wait(1)
 local Event = game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]
@@ -25,8 +25,6 @@ local char = player.Character or player.CharacterAdded:Wait()
 player.CharacterAdded:Connect(function(charz)
     char = charz
 end)
-
-
 
 local function hopserver()
     local Event = game:GetService("ReplicatedStorage").__ServerBrowser
@@ -203,6 +201,36 @@ local function dotask(ftype,tbl,bool)
             end
             pcall(getchest)
             task.wait()
+        end
+        
+        if getgenv().Config and getgenv().Config.WebHookUrl then
+            request({
+                Url = getgenv().Config.WebHook,
+                Method = "POST",
+                Headers = {["Content-type"] = "application/json"},
+                Body = Http:JSONEncode({
+                    ["content"] = "@here",
+                    ["embeds"] = {
+                        {
+                            ["description"] = "```js\n$" .. tostring(game:GetService("Players").LocalPlayer.Data.Beli.Value) .. "```",
+                            ["title"] = player.Name,
+                            ["author"] = {
+                                ["name"] = player.Name
+                            },
+                            ["footer"] = {
+                                ["icon_url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter",
+                                ["text"] = "LIUDEX Z"
+                            },
+                            ["thumbnail"] = {
+                                ["url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter"
+                            },
+                            ["url"] = "https://www.roblox.com/users/" .. tostring(player.UserId) .. "/profile",
+                            ["color"] = 3671478
+                        }
+                    },
+                    ["username"] = "Notify"
+                })
+            })
         end
         task.wait(1)
         hopserver()
