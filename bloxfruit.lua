@@ -6,6 +6,12 @@ local queueonteleport = queueonteleport or queue_on_teleport
 local player = Players.LocalPlayer
 local speed = 300
 local StarterGui = cloneref(game:GetService("StarterGui"))
+local function init()
+    game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]:FireServer("TeamSelect/Team/Marines")
+    task.wait(0.1)
+    game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("SetTeam2","Marines")
+end 
+repeat init() task.wait(0.2) until player.Character
 --[[
 task.wait(1)
 local Event = game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]
@@ -19,15 +25,8 @@ player.CharacterAdded:Connect(function(charz)
     char = charz
 end)
 
-local function init()
-    game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]:FireServer("TeamSelect/Team/Marines")
-    task.wait(0.1)
-    game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("SetTeam2","Marines")
-end
-game.Loaded:Connect(function() 
-    task.wait(5) --in case you have low fps
-    init()
-end)
+
+
 local function hopserver()
     local Event = game:GetService("ReplicatedStorage").__ServerBrowser
     local tbl = Http:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100&cursor="))
