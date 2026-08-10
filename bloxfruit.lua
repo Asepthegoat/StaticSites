@@ -2,7 +2,7 @@ local TS,RS,Http = cloneref(game:GetService("TweenService")),cloneref(game:GetSe
 local lastrs,lastattack,steptick = tick(),tick(),tick()
 local isFarming,hide_notify = false,false
 local Players = cloneref(game:GetService("Players"))
-local queonteleport = queonteleport or que_on_teleport
+local queueonteleport = queueonteleport or queue_on_teleport
 local player = Players.LocalPlayer
 local speed = 300
 local StarterGui = cloneref(game:GetService("StarterGui"))
@@ -257,7 +257,7 @@ task.wait(1)
 game:GetService("VirtualUser"):ClickButton2(Vector2.new(math.random(1,10),math.random(1,10)))
 end)
 
-queonteleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()]])
+queueonteleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()]])
 --FPS Booster
 task.spawn(function() --onclient hook
     for i,v in pairs(getconnections(game:GetService("ReplicatedStorage").Remotes.FX.OnClientEvent)) do
