@@ -2,6 +2,7 @@ local TS,RS,Http = cloneref(game:GetService("TweenService")),cloneref(game:GetSe
 local lastrs,lastattack,steptick = tick(),tick(),tick()
 local isFarming,hide_notify = false,false
 local Players = cloneref(game:GetService("Players"))
+local queonteleport = queonteleport or que_on_teleport
 local player = Players.LocalPlayer
 local speed = 300
 local StarterGui = cloneref(game:GetService("StarterGui"))
@@ -286,5 +287,5 @@ local block;block = hookmetamethod(game,"__namecall",newcclosure(function(self,.
     end
     return block(self,...)
 end))
-
-dotask("chest",{"Peanut","Loaf","IceCream","Chocolate","SeaCastle","BigMansion"},true)
+local farm_island_list = getgenv().IslandToFarm or {"Peanut","Loaf","IceCream","Chocolate","SeaCastle","BigMansion"}
+dotask("chest",farm_island_list,true)
