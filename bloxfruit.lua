@@ -11,6 +11,7 @@ local function init()
     task.wait(0.1)
     game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("SetTeam2","Marines")
 end 
+task.wait(5)
 repeat init() task.wait(0.2) until player.Character
 --[[
 task.wait(1)
