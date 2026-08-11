@@ -362,13 +362,18 @@ game:GetService("VirtualUser"):ClickButton2(Vector2.new(0,0))
 task.wait(1)
 game:GetService("VirtualUser"):ClickButton2(Vector2.new(math.random(1,10),math.random(1,10)))
 end)
+local variables
+for i,v in pairs(getgenv().Config.IslandToFarm) do
+    variables = variables .. "'" .. v .. "'"
+end
+queueonteleport( [[
+getgenv().Config = {
+    WebHook = "]] .. getgenv().Config.WebHook .. [["
+}
 
-queueonteleport([[
-    getgenv().Config = {
-        WebHook =]] .. getgenv().Config.WebHook .. [[
-    }
-    getgenv().IslandToFarm = cloneref(game:GetService("HttpService")):JSONDecode(]] .. Http:JSONEncode(getgenv().IslandToFarm) .. [[)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()
+getgenv().IslandToFarm = {]] .. variables .. [[}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()
 ]])
 --FPS Booster
 task.spawn(function() --onclient hook
