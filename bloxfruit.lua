@@ -6,6 +6,13 @@ local queueonteleport = queueonteleport or queue_on_teleport
 local player = Players.LocalPlayer
 local speed = 300
 local StarterGui = cloneref(game:GetService("StarterGui"))
+local RarityList = {
+    [0] = "Common",
+    [1] = "UnCommon",
+    [2] = "Rare",
+    [3] = "Legendary",
+    [4] = "Mythic"
+}
 local function init()
     game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]:FireServer("TeamSelect/Team/Marines")
     task.wait(0.1)
@@ -81,6 +88,7 @@ local function gacha() --work
     if Result then
         Event:InvokeServer("Cousin","DLCBoxData")
     end
+    return Result
 end
 
 local function scanchest()
@@ -156,7 +164,9 @@ local islandList = {
     IceCream = Vector3.new(-918.69873046875, 310.99249267578125, -11454.71875),
     Loaf = Vector3.new(-2038.2222900390625, 40.860774993896484, -11983.6796875),
     Chocolate = Vector3.new(-78.45331573486328, 255.99114990234375, -12215.6201171875),
-    Peanut = Vector3.new(-2112.87255859375, 195.64865112304688, -10225.859375)
+    Peanut = Vector3.new(-2112.87255859375, 195.64865112304688, -10225.859375),
+    Haunted1 = Vector3.new(-9519.880859375, 3456.779296875, 6742.7119140625),
+    Haunted2 = Vector3.new(-9510.61328125, 508.8923034667969, 6046.6328125)
 }
 local function gotoisland(island)
     if portal[island] then
@@ -169,6 +179,56 @@ local function gotoisland(island)
         tween(islandList[island])
         task.wait(0.5)
     end
+end
+
+local function storefruit()
+    for i,v in ipairs(player.Backpack:GetChildren()) do
+        if string.find(v.Name,"Fruit") then
+            char.Humanoid:EquipTool(v)
+            task.wait(1)
+            local name = string.split(v.Name," ") 
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",name[1] .. "-" .. name[1],v)
+        end
+    end
+    task.wait()
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("GetFruits",false)
+end
+for i,v in pairs(getconnections(game:GetService("ReplicatedStorage").Modules.Net["RE/SpinGacha"].OnClientEvent)) do
+    pcall(restorefunction,v.Function)
+    local a;a = hookfunction(v.Function,function(...)
+        local args = {...}
+        if typeof(args[1]) == "table" then
+            request({
+                Url = getgenv().Config.WebHook,
+                Method = "POST",
+                Headers = {["Content-type"] = "application/json"},
+                Body = Http:JSONEncode({
+                    ["content"] = "@here",
+                    ["embeds"] = {
+                        {
+                            ["description"] = "```js\nRolled: " .. args[1].Winners[1].DisplayName .. " ```",
+                            ["title"] = player.Name,
+                            ["author"] = {
+                                ["name"] = player.Name
+                            },
+                            ["footer"] = {
+                                ["icon_url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter",
+                                ["text"] = "LIUDEX Z"
+                            },
+                            ["thumbnail"] = {
+                                ["url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter"
+                            },
+                            ["url"] = "https://www.roblox.com/users/" .. tostring(player.UserId) .. "/profile",
+                            ["color"] = 3671478
+                        }
+                    },
+                    ["username"] = "Notify"
+                })
+            })
+            print()
+        end
+        return a(...)
+    end)
 end
 
 local M1Fruit = 1
@@ -185,6 +245,7 @@ end
 local scripts = {}
 local function dotask(ftype,tbl,bool)
     isFarming = bool
+    local havefruit = false
     while true do
         if not char then return end
         for i,v in ipairs(tbl) do
@@ -203,7 +264,7 @@ local function dotask(ftype,tbl,bool)
             task.wait()
         end
         
-        if getgenv().Config and getgenv().Config.WebHookUrl then
+        if getgenv().Config and getgenv().Config.WebHook then
             request({
                 Url = getgenv().Config.WebHook,
                 Method = "POST",
@@ -232,11 +293,25 @@ local function dotask(ftype,tbl,bool)
                 })
             })
         end
+        if getgenv().Config.Gacha and gacha() then
+            repeat 
+                task.wait(20)
+            until not player.Character:FindFirstChild("Humanoid")
+        end
+        for i,v in ipairs(player.Backpack:GetChildren()) do
+            if string.find(v.Name,"Fruit") then
+                havefruit = true
+                break
+            end
+        end
         task.wait(1)
+        if havefruit then
+            gotoisland("BigMansion")
+            return storefruit()
+        end
         hopserver()
     end
 end
-
 --[[
 local function bringEnemy()
     setsimulationradius(200)
@@ -288,7 +363,13 @@ task.wait(1)
 game:GetService("VirtualUser"):ClickButton2(Vector2.new(math.random(1,10),math.random(1,10)))
 end)
 
-queueonteleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()]])
+queueonteleport([[
+    getgenv().Config = {
+        WebHook =]] .. getgenv().Config.WebHook .. [[
+    }
+    getgenv().IslandToFarm = cloneref(game:GetService("HttpService"):JSONDecode(]] .. Http:JSONEncode(getgenv().IslandToFarm) .. [[)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()
+]])
 --FPS Booster
 task.spawn(function() --onclient hook
     for i,v in pairs(getconnections(game:GetService("ReplicatedStorage").Remotes.FX.OnClientEvent)) do
@@ -318,5 +399,5 @@ local block;block = hookmetamethod(game,"__namecall",newcclosure(function(self,.
     end
     return block(self,...)
 end))
-local farm_island_list = getgenv().IslandToFarm or {"Peanut","Loaf","IceCream","Chocolate","SeaCastle","BigMansion"}
+local farm_island_list = getgenv().IslandToFarm or {"BigMansion"}
 dotask("chest",farm_island_list,true)
