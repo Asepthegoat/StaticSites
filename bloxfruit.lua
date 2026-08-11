@@ -367,7 +367,7 @@ queueonteleport([[
     getgenv().Config = {
         WebHook =]] .. getgenv().Config.WebHook .. [[
     }
-    getgenv().IslandToFarm = cloneref(game:GetService("HttpService"):JSONDecode(]] .. Http:JSONEncode(getgenv().IslandToFarm) .. [[)
+    getgenv().IslandToFarm = cloneref(game:GetService("HttpService")):JSONDecode(]] .. Http:JSONEncode(getgenv().IslandToFarm) .. [[)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()
 ]])
 --FPS Booster
