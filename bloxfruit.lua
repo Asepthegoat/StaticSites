@@ -362,8 +362,8 @@ game:GetService("VirtualUser"):ClickButton2(Vector2.new(0,0))
 task.wait(1)
 game:GetService("VirtualUser"):ClickButton2(Vector2.new(math.random(1,10),math.random(1,10)))
 end)
-local variables
-for i,v in pairs(getgenv().Config.IslandToFarm) do
+local variables = ""
+for i,v in pairs(getgenv().IslandToFarm) do
     variables = variables .. "'" .. v .. "'"
 end
 queueonteleport( [[
