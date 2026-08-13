@@ -364,8 +364,11 @@ game:GetService("VirtualUser"):ClickButton2(Vector2.new(math.random(1,10),math.r
 end)
 local variables = ""
 for i,v in pairs(getgenv().IslandToFarm) do
-    variables = variables .. "'" .. v .. "'"
+    variables = variables .. "'" .. v .. "' "
 end
+print(variables)
+variables = variables:split(" ")
+variables = table.concat(variables,",")
 queueonteleport( [[
 getgenv().Config = {
     WebHook = "]] .. getgenv().Config.WebHook .. [["
