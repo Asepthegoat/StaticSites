@@ -32,6 +32,8 @@ local char = player.Character or player.CharacterAdded:Wait()
 player.CharacterAdded:Connect(function(charz)
     char = charz
 end)
+game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]:FireServer("HUD/Button/Settings")
+firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Main.SettingsMenu.Content.ScrollingFrame.FastMode.FirstButton.Activated)
 
 local function hopserver()
     local Event = game:GetService("ReplicatedStorage").__ServerBrowser
@@ -198,6 +200,7 @@ for i,v in pairs(getconnections(game:GetService("ReplicatedStorage").Modules.Net
     local a;a = hookfunction(v.Function,function(...)
         local args = {...}
         if typeof(args[1]) == "table" then
+            Notify("Gacha","Got: args[1].Winners[1].DisplayName","rbxassetid://108025530291555")
             request({
                 Url = getgenv().Config.WebHook,
                 Method = "POST",
@@ -246,6 +249,7 @@ local scripts = {}
 local function dotask(ftype,tbl,bool)
     isFarming = bool
     local havefruit = false
+    RS:Set3dRenderingEnabled(false)
     while true do
         if not char then return end
         for i,v in ipairs(tbl) do
@@ -292,11 +296,6 @@ local function dotask(ftype,tbl,bool)
                     ["username"] = "Notify"
                 })
             })
-        end
-        if getgenv().Config.Gacha and gacha() then
-            repeat 
-                task.wait(20)
-            until not player.Character:FindFirstChild("Humanoid")
         end
         for i,v in ipairs(player.Backpack:GetChildren()) do
             if string.find(v.Name,"Fruit") then
@@ -369,6 +368,7 @@ end
 print(variables)
 variables = variables:split(" ")
 variables = table.concat(variables,",")
+
 queueonteleport( [[
 getgenv().Config = {
     WebHook = "]] .. getgenv().Config.WebHook .. [["
@@ -378,6 +378,7 @@ getgenv().IslandToFarm = {]] .. variables .. [[}
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Asepthegoat/StaticSites/refs/heads/main/bloxfruit.lua"))()
 ]])
+
 --FPS Booster
 task.spawn(function() --onclient hook
     for i,v in pairs(getconnections(game:GetService("ReplicatedStorage").Remotes.FX.OnClientEvent)) do
@@ -408,4 +409,5 @@ local block;block = hookmetamethod(game,"__namecall",newcclosure(function(self,.
     return block(self,...)
 end))
 local farm_island_list = getgenv().IslandToFarm or {"BigMansion"}
+Notify("Chest Farm","Snickers","rbxassetid://72039887845044")
 dotask("chest",farm_island_list,true)
