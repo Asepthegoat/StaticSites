@@ -197,40 +197,42 @@ local function storefruit()
 end
 for i,v in pairs(getconnections(game:GetService("ReplicatedStorage").Modules.Net["RE/SpinGacha"].OnClientEvent)) do
     pcall(restorefunction,v.Function)
-    local a;a = hookfunction(v.Function,function(...)
-        local args = {...}
-        if typeof(args[1]) == "table" then
-            Notify("Gacha","Got: args[1].Winners[1].DisplayName","rbxassetid://108025530291555")
-            request({
-                Url = getgenv().Config.WebHook,
-                Method = "POST",
-                Headers = {["Content-type"] = "application/json"},
-                Body = Http:JSONEncode({
-                    ["content"] = "@here",
-                    ["embeds"] = {
-                        {
-                            ["description"] = "```js\nRolled: " .. args[1].Winners[1].DisplayName .. " ```",
-                            ["title"] = player.Name,
-                            ["author"] = {
-                                ["name"] = player.Name
-                            },
-                            ["footer"] = {
-                                ["icon_url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter",
-                                ["text"] = "LIUDEX Z"
-                            },
-                            ["thumbnail"] = {
-                                ["url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter"
-                            },
-                            ["url"] = "https://www.roblox.com/users/" .. tostring(player.UserId) .. "/profile",
-                            ["color"] = 3671478
-                        }
-                    },
-                    ["username"] = "Notify"
+    pcall(function() 
+        local a;a = hookfunction(v.Function,function(...)
+            local args = {...}
+            if typeof(args[1]) == "table" then
+                Notify("Gacha","Got: args[1].Winners[1].DisplayName","rbxassetid://108025530291555")
+                request({
+                    Url = getgenv().Config.WebHook,
+                    Method = "POST",
+                    Headers = {["Content-type"] = "application/json"},
+                    Body = Http:JSONEncode({
+                        ["content"] = "@here",
+                        ["embeds"] = {
+                            {
+                                ["description"] = "```js\nRolled: " .. args[1].Winners[1].DisplayName .. " ```",
+                                ["title"] = player.Name,
+                                ["author"] = {
+                                    ["name"] = player.Name
+                                },
+                                ["footer"] = {
+                                    ["icon_url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter",
+                                    ["text"] = "LIUDEX Z"
+                                },
+                                ["thumbnail"] = {
+                                    ["url"] = "https://tr.rbxcdn.com/180DAY-768363145abfc634e1b026bdb214fbef/420/420/Image/Png/noFilter"
+                                },
+                                ["url"] = "https://www.roblox.com/users/" .. tostring(player.UserId) .. "/profile",
+                                ["color"] = 3671478
+                            }
+                        },
+                        ["username"] = "Notify"
+                    })
                 })
-            })
-            print()
-        end
-        return a(...)
+                print()
+            end
+            return a(...)
+        end)    
     end)
 end
 
