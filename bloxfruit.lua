@@ -34,7 +34,7 @@ player.CharacterAdded:Connect(function(charz)
 end)
 game:GetService("ReplicatedStorage").Modules.Net["RE/OnAnalyticsActivity"]:FireServer("HUD/Button/Settings")
 firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Main.SettingsMenu.Content.ScrollingFrame.FastMode.FirstButton.Activated)
-
+firesignal(game:GetService("ReplicatedStorage").Modules.Net["RE/PrepClientSpin"].OnClientEvent)
 local function hopserver()
     local Event = game:GetService("ReplicatedStorage").__ServerBrowser
     local tbl = Http:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100&cursor="))
