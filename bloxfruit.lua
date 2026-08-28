@@ -251,7 +251,7 @@ local scripts = {}
 local function dotask(ftype,tbl,bool)
     isFarming = bool
     local havefruit = false
-    RS:Set3dRenderingEnabled(false)
+
     while true do
         if not char then return end
         for i,v in ipairs(tbl) do
