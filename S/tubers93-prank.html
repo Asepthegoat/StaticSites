@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>SYSTEM ACCESS // TUBERS93</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: default;
+  }
+  #scanlines {
+    position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    background: repeating-linear-gradient(
+      0deg, rgba(0,255,100,0.03) 0px, rgba(0,255,100,0.03) 1px,
+      transparent 2px, transparent 4px
+    );
+    mix-blend-mode: overlay;
+  }
+  #noise {
+    position: fixed; inset: 0; pointer-events: none; z-index: 40;
+    opacity: 0.05;
+  }
+  #vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 45;
+    box-shadow: inset 0 0 200px 60px #000;
+  }
+  #wrap {
+    position: relative; z-index: 10;
+    height: 100vh; width: 100vw;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: #33ff66;
+    text-shadow: 0 0 6px #33ff66, 0 0 12px #114422;
+  }
+  #glitchTitle {
+    font-size: 12vw;
+    font-weight: bold;
+    letter-spacing: 4px;
+    position: relative;
+    animation: flicker 3s infinite;
+  }
+  @media (min-width: 700px){
+    #glitchTitle{ font-size: 5.5rem; }
+  }
+  #glitchTitle::before, #glitchTitle::after {
+    content: attr(data-text);
+    position: absolute; left: 0; top: 0; width: 100%;
+    overflow: hidden; background: #000;
+  }
+  #glitchTitle::before {
+    left: 2px; text-shadow: -2px 0 #ff0033;
+    animation: glitchTop 2.5s infinite linear alternate-reverse;
+  }
+  #glitchTitle::after {
+    left: -2px; text-shadow: -2px 0 #00e5ff;
+    animation: glitchBot 3.5s infinite linear alternate-reverse;
+  }
+  @keyframes glitchTop {
+    0% { clip-path: inset(0 0 85% 0); transform: translate(0,0); }
+    20% { clip-path: inset(10% 0 60% 0); transform: translate(-3px,-1px); }
+    40% { clip-path: inset(40% 0 30% 0); transform: translate(3px,1px); }
+    60% { clip-path: inset(75% 0 5% 0); transform: translate(-2px,0); }
+    80% { clip-path: inset(5% 0 80% 0); transform: translate(2px,1px); }
+    100% { clip-path: inset(50% 0 20% 0); transform: translate(0,-1px); }
+  }
+  @keyframes glitchBot {
+    0% { clip-path: inset(80% 0 0 0); transform: translate(0,0); }
+    20% { clip-path: inset(30% 0 40% 0); transform: translate(3px,0); }
+    40% { clip-path: inset(5% 0 70% 0); transform: translate(-3px,1px); }
+    60% { clip-path: inset(60% 0 10% 0); transform: translate(2px,-1px); }
+    80% { clip-path: inset(20% 0 55% 0); transform: translate(-2px,0); }
+    100% { clip-path: inset(0 0 90% 0); transform: translate(0,1px); }
+  }
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.4; }
+  }
+  #subtitle {
+    margin-top: 1.2rem; font-size: 1rem; letter-spacing: 3px;
+    opacity: .85;
+  }
+  #terminal {
+    margin-top: 2.5rem;
+    width: min(640px, 88vw);
+    height: 220px;
+    background: rgba(0,20,5,0.55);
+    border: 1px solid #1f7a3f;
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow: hidden;
+    text-shadow: none;
+    color: #7dffa0;
+  }
+  #terminal .line { white-space: pre-wrap; word-break: break-word; }
+  .cursor { display:inline-block; width:8px; background:#7dffa0; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  #startOverlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: #000; color: #33ff66;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; letter-spacing: 2px;
+    cursor: pointer;
+    text-align: center; padding: 20px;
+  }
+  #startOverlay span { border: 1px solid #33ff66; padding: 14px 24px; border-radius: 4px; animation: pulseBox 1.6s infinite; }
+  @keyframes pulseBox { 0%,100%{opacity:1;} 50%{opacity:.5;} }
+  #muteBtn {
+    position: fixed; bottom: 16px; right: 16px; z-index: 60;
+    background: rgba(0,0,0,0.5); color: #7dffa0; border: 1px solid #2a8f4d;
+    font-family: inherit; padding: 8px 14px; border-radius: 4px; cursor: pointer;
+    font-size: 12px; letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div id="startOverlay"><span>[ KLIK UNTUK MASUK SISTEM ]</span></div>
+
+<div id="scanlines"></div>
+<div id="vignette"></div>
+<canvas id="noise"></canvas>
+
+<div id="wrap">
+  <div id="glitchTitle" data-text="TUBERS93">TUBERS93</div>
+  <div id="subtitle">STATUS: MEMANTAU AKTIVITAS ANDA...</div>
+  <div id="terminal"><div id="termInner"></div></div>
+</div>
+
+<button id="muteBtn">MUTE</button>
+
+<script>
+// ---------- noise canvas ----------
+const canvas = document.getElementById('noise');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+function drawNoise(){
+  const w = canvas.width, h = canvas.height;
+  const imgData = ctx.createImageData(w, h);
+  for (let i = 0; i < imgData.data.length; i += 4) {
+    const v = Math.random() * 255;
+    imgData.data[i] = v; imgData.data[i+1] = v; imgData.data[i+2] = v; imgData.data[i+3] = 255;
+  }
+  ctx.putImageData(imgData, 0, 0);
+  requestAnimationFrame(drawNoise);
+}
+drawNoise();
+
+// ---------- fake terminal lines ----------
+const lines = [
+  "> membuka koneksi ke server roblox...",
+  "> mendeteksi akun tetangga: [DIBLOKIR]",
+  "> memindai inventory... forsaken.exe ditemukan",
+  "> anomali terdeteksi: entitas TUBERS93",
+  "> level kepercayaan target: TERLALU PERCAYA DIRI",
+  "> mengunduh lore TUBERS93... 92% ##########",
+  "> peringatan: target belum pernah main gamenya, cuma tau dari forsaken",
+  "> menyisipkan pesan tersembunyi...",
+  "> \"dia mengawasi darimu.\"",
+  "> koneksi stabil. menunggu korban membuka website ini...",
+  "> jangan panik. ini cuma prank kok :)"
+];
+const termInner = document.getElementById('termInner');
+let lineIndex = 0, charIndex = 0, currentLine = null;
+
+function typeLoop(){
+  if (lineIndex >= lines.length){ lineIndex = 0; termInner.innerHTML = ''; }
+  if (charIndex === 0){
+    currentLine = document.createElement('div');
+    currentLine.className = 'line';
+    termInner.appendChild(currentLine);
+    if (termInner.children.length > 9) termInner.removeChild(termInner.children[0]);
+  }
+  const full = lines[lineIndex];
+  charIndex++;
+  currentLine.textContent = full.slice(0, charIndex);
+  if (charIndex >= full.length){
+    charIndex = 0; lineIndex++;
+    setTimeout(typeLoop, 500 + Math.random()*400);
+  } else {
+    setTimeout(typeLoop, 18 + Math.random()*35);
+  }
+}
+
+// ---------- ambient relaxing sound (generated, no external files) ----------
+let audioCtx, masterGain, isMuted = false;
+function startAudio(){
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.25;
+  masterGain.connect(audioCtx.destination);
+
+  // soft pad drone: layered detuned sine/triangle oscillators
+  const notes = [110, 138.59, 164.81, 220]; // A2, C#3, E3, A3 - Am chord, calming
+  notes.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = freq;
+    const g = audioCtx.createGain();
+    g.gain.value = 0.06 - i*0.01;
+    // slow LFO for gentle movement
+    const lfo = audioCtx.createOscillator();
+    lfo.frequency.value = 0.05 + i*0.02;
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 0.02;
+    lfo.connect(lfoGain);
+    lfoGain.connect(g.gain);
+    lfo.start();
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start();
+  });
+
+  // gentle filtered noise for "wind / static hacker ambience"
+  const bufferSize = 2 * audioCtx.sampleRate;
+  const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const output = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) output[i] = (Math.random()*2-1) * 0.5;
+  const noiseSrc = audioCtx.createBufferSource();
+  noiseSrc.buffer = noiseBuffer;
+  noiseSrc.loop = true;
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 400;
+  const noiseGain = audioCtx.createGain();
+  noiseGain.gain.value = 0.02;
+  noiseSrc.connect(filter);
+  filter.connect(noiseGain);
+  noiseGain.connect(masterGain);
+  noiseSrc.start();
+
+  // occasional soft "blip" like a terminal beep
+  function blip(){
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 600 + Math.random()*400;
+    g.gain.value = 0;
+    o.connect(g); g.connect(masterGain);
+    const t = audioCtx.currentTime;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.05, t+0.02);
+    g.gain.linearRampToValueAtTime(0, t+0.15);
+    o.start(t); o.stop(t+0.2);
+    setTimeout(blip, 3000 + Math.random()*5000);
+  }
+  blip();
+}
+
+document.getElementById('startOverlay').addEventListener('click', function(){
+  this.style.display = 'none';
+  startAudio();
+  typeLoop();
+});
+
+document.getElementById('muteBtn').addEventListener('click', function(){
+  if (!masterGain) return;
+  isMuted = !isMuted;
+  masterGain.gain.value = isMuted ? 0 : 0.25;
+  this.textContent = isMuted ? 'UNMUTE' : 'MUTE';
+});
+</script>
+
+</body>
+</html>
